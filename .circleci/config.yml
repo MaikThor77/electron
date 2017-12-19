@@ -64,7 +64,7 @@ jobs:
       - persist_to_workspace:
           root: /home/builduser
           paths:
-            - project
+            - project/out
       - store_artifacts:
           path: electron.zip
   electron-linux-arm-test:
@@ -72,12 +72,27 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - checkout
       - run:
           name: Test in ARM docker container
           command: |
             docker run -it \
             --mount type=bind,source=/tmp/workspace,target=/tmp/workspace \
-            --rm electronbuilds/electronarm7:0.0.3
+            --rm electronbuilds/electronarm7:0.0.3 > version.txt
+      - run:
+          name: Verify version results
+          command: |
+            cat version.txt
+            if grep -q `script/get-version.py` version.txt; then
+              echo "Versions match"
+            else
+              echo "Versions do not match"
+              exit 1
+            fi
+            if grep -q "core dumped" version.txt; then
+              echo "Core dump detected"
+              exit 1
+            fi
   electron-linux-arm64:
     docker:
       - image: electronbuilds/electron:0.0.4
@@ -138,18 +153,34 @@ jobs:
       - persist_to_workspace:
           root: /home/builduser
           paths:
-            - project
+            - project/out
   electron-linux-arm64-test:
     machine: true
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - checkout
       - run:
           name: Test in ARM64 docker container
           command: |
             docker run -it \
             --mount type=bind,source=/tmp/workspace,target=/tmp/workspace \
-            --rm electronbuilds/electronarm64:0.0.4
+            --rm electronbuilds/electronarm64:0.0.4 > version.txt
+      - run:
+          name: Verify version results
+          command: |
+            cat version.txt
+            if grep -q `script/get-version.py` version.txt; then
+              echo "Versions match"
+            else
+              echo "Versions do not match"
+              exit 1
+            fi
+            if grep -q "core dumped" version.txt; then
+              echo "Core dump detected"
+              exit 1
+            fi
+
   electron-linux-ia32:
     docker:
       - image: electronbuilds/electron:0.0.4
