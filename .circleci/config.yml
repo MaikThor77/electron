@@ -77,7 +77,7 @@ jobs:
           command: |
             docker run -it \
             --mount type=bind,source=/tmp/workspace,target=/tmp/workspace \
-            --rm electronbuilds/electronarm7:0.0.1
+            --rm electronbuilds/electronarm7:0.0.2
   electron-linux-arm64:
     docker:
       - image: electronbuilds/electron:0.0.4
@@ -145,7 +145,7 @@ jobs:
           command: |
             docker run -it \
             --mount type=bind,source=/tmp/workspace,target=/tmp/workspace \
-            --rm electronbuilds/electronarm64:0.0.1
+            --rm electronbuilds/electronarm64:0.0.2
   electron-linux-ia32:
     docker:
       - image: electronbuilds/electron:0.0.4
