@@ -1,4 +1,4 @@
-FROM resin/armv7hf-debian
+FROM show0k/miniconda-armv7
 
 RUN [ "cross-build-start" ]
 RUN apt-get update && apt-get install -y\

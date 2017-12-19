@@ -1,4 +1,10 @@
-FROM resin/aarch64-debian:jessie
+FROM arm64v8/debian:jessie-slim
+
+ENV QEMU_EXECVE 1
+
+COPY tools/linux/arm64 /usr/bin
+
+RUN mv /bin/sh /bin/sh.real; ln -s /bin/sh.real /bin/sh
 
 RUN [ "cross-build-start" ]
 RUN apt-get update && apt-get install -y\
@@ -28,11 +34,6 @@ RUN apt-get update && apt-get install -y\
  python-dbusmock \
  wget \
  xvfb
-
-# Install node.js
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get update && apt-get install -y nodejs
-RUN [ "cross-build-end" ]
 
 ADD tools/xvfb-init.sh /etc/init.d/xvfb
 RUN chmod a+x /etc/init.d/xvfb
