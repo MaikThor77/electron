@@ -135,6 +135,10 @@ jobs:
              else
                 echo 'Skipping upload distribution because build is not for release'
              fi
+      - persist_to_workspace:
+          root: /home/builduser
+          paths:
+            - project
   electron-linux-arm64-test:
     machine: true
     steps:
